@@ -149,4 +149,5 @@ if __name__ == "__main__":
     #conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
     drone = BackyardFlyer(conn)
     time.sleep(2)
+    print('starting drone...')
     drone.start()
