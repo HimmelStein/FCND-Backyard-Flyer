@@ -105,7 +105,7 @@ class BackyardFlyer(Drone):
         """
         This triggers when `MsgID.LOCAL_VELOCITY` is received and self.local_velocity contains new data
         """
-        pass
+        print('velocity:', self.local_velocity)
 
     def state_callback(self):
         """
@@ -135,7 +135,7 @@ class BackyardFlyer(Drone):
         print("arming transition")
         self.take_control()
         self.arm()
-        self.set_home_position(0,0, 0)
+        self.set_home_position(0, 0, 0)
         self.flight_state = States.ARMING
 
     def takeoff_transition(self):
@@ -219,7 +219,7 @@ if __name__ == "__main__":
 
     conn = MavlinkConnection('tcp:{0}:{1}'.format(args.host, args.port), threaded=False, PX4=False)
     #conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
-    squareEdge, altitude, delta = 50, 40, 0.1
+    squareEdge, altitude, delta = 50, 40, 0.01
     drone = BackyardFlyer(conn, squareEdge, altitude, delta)
     time.sleep(2)
     print('starting drone...')
