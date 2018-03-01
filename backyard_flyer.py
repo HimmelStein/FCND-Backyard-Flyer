@@ -216,7 +216,7 @@ if __name__ == "__main__":
     Sample usage: 
     step 1:  $ python -m visdom.server 
     step 2: open a new terminal 
-    $ python backyard_flyer.py --edge 25 --altitude 10 --precision 0.3
+    $ python backyard_flyer.py --edge 250 --altitude 100 --precision 0.3
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=5760, help='Port number')
