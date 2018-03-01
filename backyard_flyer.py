@@ -105,7 +105,8 @@ class BackyardFlyer(Drone):
         """
         This triggers when `MsgID.LOCAL_VELOCITY` is received and self.local_velocity contains new data
         """
-        print('velocity:', self.local_velocity)
+        if self.flight_state == States.LANDING:
+            self.disarming_transition()
 
     def state_callback(self):
         """
@@ -146,7 +147,6 @@ class BackyardFlyer(Drone):
         """
         print("takeoff transition")
         self.takeoff(self._targetAltitude)
-        print(self._targetAltitude)
         if self.flight_state == States.ARMING and abs(self.local_position[2] + self._targetAltitude) < self._delta:
             self.startLocation[0] = self.local_position[0]
             self.startLocation[1] = self.local_position[1]
@@ -212,14 +212,24 @@ class BackyardFlyer(Drone):
 
 
 if __name__ == "__main__":
+    """
+    Sample usage: 
+    step 1:  $ python -m visdom.server 
+    step 2: open a new terminal 
+    $ python backyard_flyer.py --edge 25 --altitude 10 --precision 0.3
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=5760, help='Port number')
     parser.add_argument('--host', type=str, default='127.0.0.1', help="host address, i.e. '127.0.0.1'")
+
+    parser.add_argument('--edge', type=int, default=50, help='Length of the square edge')
+    parser.add_argument('--altitude', type=int, default=40, help='Altitude of the flying')
+    parser.add_argument('--precision', type=float, default=0.2, help='Precision to meet targets')
     args = parser.parse_args()
 
     conn = MavlinkConnection('tcp:{0}:{1}'.format(args.host, args.port), threaded=False, PX4=False)
     #conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
-    squareEdge, altitude, delta = 50, 40, 0.01
+    squareEdge, altitude, delta = args.edge, args.altitude, args.precision
     drone = BackyardFlyer(conn, squareEdge, altitude, delta)
     time.sleep(2)
     print('starting drone...')
