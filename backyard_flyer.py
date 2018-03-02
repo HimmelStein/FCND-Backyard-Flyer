@@ -28,7 +28,7 @@ class BackyardFlyer(Drone):
         self.startLocation = np.array([0.0, 0.0, 0.0])
         self.target_position = np.array([0.0, 0.0, 0.0])
 
-        # Plot NE
+        # Plot NE @https://udacity.github.io/udacidrone/docs/visdom-tutorial.html
         ne = np.array([0, 0]).reshape(-1, 2)
         self.ne_plot = self.v.scatter(ne,
                                       opts=dict(
@@ -37,7 +37,7 @@ class BackyardFlyer(Drone):
             ylabel='East'
         ))
 
-        # Plot D
+        # Plot D @https://udacity.github.io/udacidrone/docs/visdom-tutorial.html
         d = np.array([-self.local_position[2]])
         self.t = 1
         self.d_plot = self.v.line(d, X=np.array([self.t]), opts=dict(
@@ -78,12 +78,20 @@ class BackyardFlyer(Drone):
         return square
 
     def update_ne_plot_callback(self):
+        """
+        reference to https://udacity.github.io/udacidrone/docs/visdom-tutorial.html
+        :return:
+        """
         if self.flight_state == States.TAKEOFF:
             ne = np.array([self.local_position[0]-self.startLocation[0],
                            self.local_position[1]-self.startLocation[1]]).reshape(-1, 2)
             self.v.scatter(ne, win=self.ne_plot, update='append')
 
     def update_d_plot_callback(self):
+        """
+        reference to https://udacity.github.io/udacidrone/docs/visdom-tutorial.html
+        :return:
+        """
         d = np.array([-self.local_position[2]])
         # update timestep
         self.t += 1
